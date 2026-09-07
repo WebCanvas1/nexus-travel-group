@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { siteConfig } from '@/data/siteConfig';
 import { useNav } from '@/context/NavContext';
 import type { EnquiryType } from '@/data/tours';
@@ -50,8 +50,8 @@ export function Header() {
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ease-premium ${
           scrolled
-            ? 'bg-charcoal-950/95 backdrop-blur-md py-4 border-b border-ivory-200/5'
-            : 'bg-transparent py-6'
+            ? 'bg-charcoal-950/95 backdrop-blur-md py-3 border-b border-ivory-200/5'
+            : 'bg-transparent py-4'
         }`}
       >
         <div className="container-premium flex items-center justify-between">
@@ -60,11 +60,14 @@ export function Header() {
               navigate('home');
               setMobileOpen(false);
             }}
-            className="group flex flex-col items-start"
+            className="group flex items-center"
             aria-label="Nexus Travel Group home"
           >
-            <span className={`font-display text-xl md:text-2xl font-medium tracking-wide transition-colors duration-500 ${scrolled ? 'text-ivory-50' : 'text-ivory-50'}`}>NEXUS</span>
-            <span className={`text-[10px] uppercase tracking-[0.3em] transition-colors duration-500 ${scrolled ? 'text-ochre-400' : 'text-ochre-300'}`}>Travel Group</span>
+            <img
+              src="/nexus-logo.jpg"
+              alt="Nexus Travel Group"
+              className="h-14 md:h-16 w-auto object-contain"
+            />
           </button>
           <nav className="hidden lg:flex items-center gap-8">
             {siteConfig.nav.map((item) => (
@@ -83,6 +86,9 @@ export function Header() {
         <div className="absolute inset-0 bg-charcoal-950/98 backdrop-blur-xl" onClick={() => setMobileOpen(false)} />
         <div className="relative h-full flex flex-col justify-center px-8">
           <button onClick={() => setMobileOpen(false)} className="absolute top-6 right-6 p-2" aria-label="Close menu"><X className="w-7 h-7 text-ivory-100" /></button>
+          <div className="absolute top-5 left-6">
+            <img src="/nexus-logo.jpg" alt="Nexus Travel Group" className="h-16 w-auto object-contain" />
+          </div>
           <nav className="flex flex-col gap-2">
             {siteConfig.nav.map((item, i) => (
               <button key={item.target} onClick={() => handleNav(item.target)} className="text-left font-display text-3xl font-light text-ivory-100 hover:text-ochre-400 transition-all duration-500 ease-premium" style={{opacity: mobileOpen ? 1 : 0, transform: mobileOpen ? 'translateY(0)' : 'translateY(20px)', transition: `opacity 0.5s ease ${0.1 + i * 0.08}s, transform 0.5s ease ${0.1 + i * 0.08}s, color 0.3s ease`}}>{item.label}</button>
