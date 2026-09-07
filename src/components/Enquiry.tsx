@@ -1,28 +1,220 @@
 import { useState, useEffect, type FormEvent } from 'react';
-import { Check, Send, AlertCircle } from 'lucide-react';
+import { Check, Send, AlertCircle, Loader2 } from 'lucide-react';
 import { Reveal } from '@/components/Reveal';
 import { enquiryTypes, groupTypes, type EnquiryType, type GroupType } from '@/data/tours';
 import { sectionImages, siteConfig } from '@/data/siteConfig';
 import { useNav } from '@/context/NavContext';
 
+const ENQUIRY_EMAIL = 'nexustravel@outlook.com.au';
+const FORMSUBMIT_ENDPOINT = `https://formsubmit.co/ajax/${ENQUIRY_EMAIL}`;
+
 export function Enquiry() {
   const { enquiryState } = useNav();
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
-  const [form, setForm] = useState({ fullName: '', phone: '', email: '', enquiryType: '' as EnquiryType | '', groupType: '' as GroupType | '', groupSize: '', travelDate: '', pickupLocation: '', message: '' });
-  useEffect(() => { if (enquiryState.type) setForm((prev) => ({ ...prev, enquiryType: enquiryState.type })); }, [enquiryState]);
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => { const { name, value } = e.target; setForm((prev) => ({ ...prev, [name]: value })); };
-  const handleSubmit = (e: FormEvent) => { e.preventDefault(); setError(''); if (!form.fullName || !form.email || !form.enquiryType) { setError("Please fill in your name, email and the service you're interested in."); return; } setSubmitted(true); };
-  const handleReset = () => { setForm({ fullName: '', phone: '', email: '', enquiryType: '', groupType: '', groupSize: '', travelDate: '', pickupLocation: '', message: '' }); setSubmitted(false); };
-  const inputClass = "w-full bg-charcoal-800 border border-ivory-200/10 rounded-sm px-4 py-3 text-ivory-100 placeholder-ivory-300/30 focus:outline-none focus:border-ochre-400/50 transition-colors duration-300";
-  return <section id="enquiry" className="relative py-24 md:py-36 overflow-hidden bg-charcoal-950"><div className="absolute inset-0"><img src={sectionImages.enquiry} alt="" className="w-full h-full object-cover opacity-15" loading="lazy" /><div className="absolute inset-0 bg-gradient-charcoal" /></div><div className="relative container-premium"><div className="max-w-3xl mx-auto"><div className="text-center mb-12"><Reveal><p className="eyebrow mb-4">Enquiry</p></Reveal><Reveal delay={1}><h2 className="section-heading text-balance">Your next journey starts <span className="italic text-ochre-300">here.</span></h2></Reveal><Reveal delay={2}><p className="mt-6 text-lg text-ivory-200/70">Tell us where you'd like to go and we'll take it from there.</p></Reveal></div><Reveal delay={3}>{submitted ? <div className="bg-charcoal-900 border border-ochre-400/20 rounded-sm p-10 md:p-12 text-center"><div className="w-16 h-16 mx-auto rounded-full bg-ochre-500/20 flex items-center justify-center mb-6"><Check className="w-8 h-8 text-ochre-400" /></div><h3 className="font-display text-2xl font-light text-ivory-50 mb-3">Thank you for your enquiry</h3><p className="text-ivory-200/70 max-w-md mx-auto leading-relaxed">We've received your enquiry and a member of the Nexus Travel Group team will be in touch with you personally to discuss your journey.</p><button onClick={handleReset} className="btn-outline mt-8">Send Another Enquiry</button></div> : <form onSubmit={handleSubmit} className="bg-charcoal-900/80 backdrop-blur-sm border border-ivory-200/5 rounded-sm p-6 md:p-10 space-y-6">
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6"><div><label className="block text-xs uppercase tracking-[0.2em] text-ivory-300/60 mb-2">Full Name *</label><input type="text" name="fullName" value={form.fullName} onChange={handleChange} required className={inputClass} placeholder="Your name" /></div><div><label className="block text-xs uppercase tracking-[0.2em] text-ivory-300/60 mb-2">Phone</label><input type="tel" name="phone" value={form.phone} onChange={handleChange} className={inputClass} placeholder="Your phone number" /></div></div>
-    <div><label className="block text-xs uppercase tracking-[0.2em] text-ivory-300/60 mb-2">Email *</label><input type="email" name="email" value={form.email} onChange={handleChange} required className={inputClass} placeholder="Your email address" /></div>
-    <div><label className="block text-xs uppercase tracking-[0.2em] text-ivory-300/60 mb-2">Tour / Service Interested In *</label><select name="enquiryType" value={form.enquiryType} onChange={handleChange} required className={inputClass}><option value="">Select a service</option>{enquiryTypes.map((type) => <option key={type} value={type}>{type}</option>)}</select></div>
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6"><div><label className="block text-xs uppercase tracking-[0.2em] text-ivory-300/60 mb-2">Group Type</label><select name="groupType" value={form.groupType} onChange={handleChange} className={inputClass}><option value="">Select a group type</option>{groupTypes.map((type) => <option key={type} value={type}>{type}</option>)}</select></div><div><label className="block text-xs uppercase tracking-[0.2em] text-ivory-300/60 mb-2">Approximate Group Size</label><input type="text" name="groupSize" value={form.groupSize} onChange={handleChange} className={inputClass} placeholder="e.g. 20" /></div></div>
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6"><div><label className="block text-xs uppercase tracking-[0.2em] text-ivory-300/60 mb-2">Preferred Date</label><input type="date" name="travelDate" value={form.travelDate} onChange={handleChange} className={inputClass} /></div><div><label className="block text-xs uppercase tracking-[0.2em] text-ivory-300/60 mb-2">Pickup / Starting Location</label><input type="text" name="pickupLocation" value={form.pickupLocation} onChange={handleChange} className={inputClass} placeholder="e.g. Sydney CBD" /></div></div>
-    <div><label className="block text-xs uppercase tracking-[0.2em] text-ivory-300/60 mb-2">Message / Additional Requirements</label><textarea name="message" value={form.message} onChange={handleChange} rows={4} className={`${inputClass} resize-none`} placeholder="Tell us about your travel plans..." /></div>
-    {error && <div className="flex items-center gap-2 text-sm text-red-400"><AlertCircle className="w-4 h-4" />{error}</div>}
-    <button type="submit" className="btn-primary w-full">Send My Enquiry<Send className="w-4 h-4" /></button><p className="text-xs text-ivory-300/40 text-center">We'll respond personally — no automated replies. Or call us on <a href={`tel:${siteConfig.phone.replace(/\s/g, '')}`} className="text-ochre-400 hover:text-ochre-300 transition-colors">{siteConfig.phone}</a>.</p>
-  </form>}</Reveal></div></div></section>;
+  const [form, setForm] = useState({
+    fullName: '',
+    phone: '',
+    email: '',
+    enquiryType: '' as EnquiryType | '',
+    groupType: '' as GroupType | '',
+    groupSize: '',
+    travelDate: '',
+    pickupLocation: '',
+    message: '',
+  });
+
+  useEffect(() => {
+    if (enquiryState.type) {
+      setForm((prev) => ({ ...prev, enquiryType: enquiryState.type }));
+    }
+  }, [enquiryState]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    if (!form.fullName || !form.email || !form.enquiryType) {
+      setError("Please fill in your name, email and the service you're interested in.");
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      const response = await fetch(FORMSUBMIT_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          _subject: `New Nexus Travel Group enquiry — ${form.enquiryType}`,
+          _template: 'table',
+          _honey: '',
+          Name: form.fullName,
+          Phone: form.phone || 'Not provided',
+          Email: form.email,
+          'Tour / Service': form.enquiryType,
+          'Group Type': form.groupType || 'Not provided',
+          'Approximate Group Size': form.groupSize || 'Not provided',
+          'Preferred Date': form.travelDate || 'Not provided',
+          'Pickup / Starting Location': form.pickupLocation || 'Not provided',
+          Message: form.message || 'No additional message',
+          email: form.email,
+        }),
+      });
+
+      const result = await response.json().catch(() => null);
+
+      if (!response.ok || result?.success === false) {
+        throw new Error('Unable to send enquiry');
+      }
+
+      setSubmitted(true);
+    } catch (err) {
+      console.error('Enquiry submission failed:', err);
+      setError('We could not send your enquiry right now. Please try again, call us, or email us directly.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleReset = () => {
+    setForm({
+      fullName: '',
+      phone: '',
+      email: '',
+      enquiryType: '',
+      groupType: '',
+      groupSize: '',
+      travelDate: '',
+      pickupLocation: '',
+      message: '',
+    });
+    setSubmitted(false);
+    setError('');
+  };
+
+  const inputClass = 'w-full bg-charcoal-800 border border-ivory-200/10 rounded-sm px-4 py-3 text-ivory-100 placeholder-ivory-300/30 focus:outline-none focus:border-ochre-400/50 transition-colors duration-300';
+
+  return (
+    <section id="enquiry" className="relative py-24 md:py-36 overflow-hidden bg-charcoal-950">
+      <div className="absolute inset-0">
+        <img src={sectionImages.enquiry} alt="" className="w-full h-full object-cover opacity-15" loading="lazy" />
+        <div className="absolute inset-0 bg-gradient-charcoal" />
+      </div>
+
+      <div className="relative container-premium">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-12">
+            <Reveal><p className="eyebrow mb-4">Enquiry</p></Reveal>
+            <Reveal delay={1}><h2 className="section-heading text-balance">Your next journey starts <span className="italic text-ochre-300">here.</span></h2></Reveal>
+            <Reveal delay={2}><p className="mt-6 text-lg text-ivory-200/70">Tell us where you'd like to go and we'll take it from there.</p></Reveal>
+          </div>
+
+          <Reveal delay={3}>
+            {submitted ? (
+              <div className="bg-charcoal-900 border border-ochre-400/20 rounded-sm p-10 md:p-12 text-center">
+                <div className="w-16 h-16 mx-auto rounded-full bg-ochre-500/20 flex items-center justify-center mb-6">
+                  <Check className="w-8 h-8 text-ochre-400" />
+                </div>
+                <h3 className="font-display text-2xl font-light text-ivory-50 mb-3">Thank you for your enquiry</h3>
+                <p className="text-ivory-200/70 max-w-md mx-auto leading-relaxed">We've received your enquiry and a member of the Nexus Travel Group team will be in touch with you personally to discuss your journey.</p>
+                <button onClick={handleReset} className="btn-outline mt-8">Send Another Enquiry</button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="bg-charcoal-900/80 backdrop-blur-sm border border-ivory-200/5 rounded-sm p-6 md:p-10 space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-xs uppercase tracking-[0.2em] text-ivory-300/60 mb-2">Full Name *</label>
+                    <input type="text" name="fullName" value={form.fullName} onChange={handleChange} required className={inputClass} placeholder="Your name" />
+                  </div>
+                  <div>
+                    <label className="block text-xs uppercase tracking-[0.2em] text-ivory-300/60 mb-2">Phone</label>
+                    <input type="tel" name="phone" value={form.phone} onChange={handleChange} className={inputClass} placeholder="Your phone number" />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase tracking-[0.2em] text-ivory-300/60 mb-2">Email *</label>
+                  <input type="email" name="email" value={form.email} onChange={handleChange} required className={inputClass} placeholder="Your email address" />
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase tracking-[0.2em] text-ivory-300/60 mb-2">Tour / Service Interested In *</label>
+                  <select name="enquiryType" value={form.enquiryType} onChange={handleChange} required className={inputClass}>
+                    <option value="">Select a service</option>
+                    {enquiryTypes.map((type) => <option key={type} value={type}>{type}</option>)}
+                  </select>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-xs uppercase tracking-[0.2em] text-ivory-300/60 mb-2">Group Type</label>
+                    <select name="groupType" value={form.groupType} onChange={handleChange} className={inputClass}>
+                      <option value="">Select a group type</option>
+                      {groupTypes.map((type) => <option key={type} value={type}>{type}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs uppercase tracking-[0.2em] text-ivory-300/60 mb-2">Approximate Group Size</label>
+                    <input type="text" name="groupSize" value={form.groupSize} onChange={handleChange} className={inputClass} placeholder="e.g. 20" />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-xs uppercase tracking-[0.2em] text-ivory-300/60 mb-2">Preferred Date</label>
+                    <input type="date" name="travelDate" value={form.travelDate} onChange={handleChange} className={inputClass} />
+                  </div>
+                  <div>
+                    <label className="block text-xs uppercase tracking-[0.2em] text-ivory-300/60 mb-2">Pickup / Starting Location</label>
+                    <input type="text" name="pickupLocation" value={form.pickupLocation} onChange={handleChange} className={inputClass} placeholder="e.g. Sydney CBD" />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase tracking-[0.2em] text-ivory-300/60 mb-2">Message / Additional Requirements</label>
+                  <textarea name="message" value={form.message} onChange={handleChange} rows={4} className={`${inputClass} resize-none`} placeholder="Tell us about your travel plans..." />
+                </div>
+
+                {error && (
+                  <div className="flex items-center gap-2 text-sm text-red-400">
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    {error}
+                  </div>
+                )}
+
+                <button type="submit" disabled={submitting} className="btn-primary w-full disabled:opacity-60 disabled:cursor-not-allowed">
+                  {submitting ? (
+                    <>
+                      Sending Enquiry
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    </>
+                  ) : (
+                    <>
+                      Send My Enquiry
+                      <Send className="w-4 h-4" />
+                    </>
+                  )}
+                </button>
+
+                <p className="text-xs text-ivory-300/40 text-center">
+                  We'll respond personally — no automated replies. Or call us on{' '}
+                  <a href={`tel:${siteConfig.phone.replace(/\s/g, '')}`} className="text-ochre-400 hover:text-ochre-300 transition-colors">{siteConfig.phone}</a>.
+                </p>
+              </form>
+            )}
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
 }
