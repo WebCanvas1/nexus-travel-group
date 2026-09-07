@@ -21,7 +21,7 @@ export function ExploreYourWay() {
     { title: 'Extended Tours', description: 'Enjoy more of the journey with professionally planned multi-day tours and extended group travel experiences.', image: sectionImages.exploreMulti, cta: 'Plan Your Tour', enquiryType: 'Extended Tour' },
     { title: 'Guided Tours', description: 'Explore destinations with organised guided experiences designed to make group travel easy, informative and enjoyable.', image: sectionImages.exploreClub, cta: 'Plan Your Tour', enquiryType: 'Guided Tour' },
     { title: 'Group Cruises', description: 'Bring your group together with memorable cruise experiences, with assistance coordinating the journey from start to finish.', image: sectionImages.cinematicBreak, cta: 'Plan Your Cruise', enquiryType: 'Group Cruise' },
-    { title: 'Winery Tours', description: 'Relax and enjoy a carefully planned group winery experience, ideal for social groups, celebrations and memorable days away.', image: sectionImages.exploreDay, cta: 'Plan Your Tour', enquiryType: 'Winery Tour' },
+    { title: 'Winery Tours', description: 'Relax and enjoy a carefully planned group winery experience, ideal for social groups, celebrations and memorable days away.', image: '/winery-tour.png', cta: 'Plan Your Tour', enquiryType: 'Winery Tour' },
   ];
 
   return (
