@@ -9,7 +9,6 @@ import { SchoolGroupCharters } from '@/components/SchoolGroupCharters';
 import { TravelClub } from '@/components/TravelClub';
 import { WhyNexus } from '@/components/WhyNexus';
 import { CinematicBreak } from '@/components/CinematicBreak';
-import { Testimonials } from '@/components/Testimonials';
 import { Enquiry } from '@/components/Enquiry';
 import { Contact } from '@/components/Contact';
 import { Footer } from '@/components/Footer';
@@ -63,7 +62,6 @@ function AppContent() {
         <TravelClub />
         <CinematicBreak />
         <WhyNexus />
-        <Testimonials />
         <Enquiry />
         <Contact />
       </main>
