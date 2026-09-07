@@ -7,8 +7,7 @@ export const siteConfig = {
   address: 'Sydney and the Central Coast, NSW',
   social: { facebook: '#', instagram: '#' },
   nav: [
-    { label: 'Tours', target: 'tours' },
-    { label: 'Services', target: 'tours' },
+    { label: 'Day Tours', target: 'tours' },
     { label: 'School Groups', target: 'charters' },
     { label: 'Group Travel', target: 'enquiry' },
     { label: 'About', target: 'about' },
