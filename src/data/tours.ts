@@ -140,7 +140,7 @@ export const tours: Tour[] = [
     priceFrom: '$POA',
     type: 'group-cruise',
     typeName: 'Group Cruise',
-    image: 'https://images.pexels.com/photos/30294485/pexels-photo-30294485.jpeg?auto=compress&cs=tinysrgb&w=1600',
+    image: '/group-cruise.jpg',
     gallery: [
       'https://images.pexels.com/photos/785077/pexels-photo-785077.jpeg?auto=compress&cs=tinysrgb&w=1200',
       'https://images.pexels.com/photos/28671156/pexels-photo-28671156.jpeg?auto=compress&cs=tinysrgb&w=1200',
@@ -168,7 +168,7 @@ export const tours: Tour[] = [
     priceFrom: '$POA',
     type: 'winery-tour',
     typeName: 'Winery Tour',
-    image: 'https://images.pexels.com/photos/5934491/pexels-photo-5934491.jpeg?auto=compress&cs=tinysrgb&w=1600',
+    image: '/winery-tour.png',
     gallery: [
       'https://images.pexels.com/photos/3874059/pexels-photo-3874059.jpeg?auto=compress&cs=tinysrgb&w=1200',
       'https://images.pexels.com/photos/9593923/pexels-photo-9593923.jpeg?auto=compress&cs=tinysrgb&w=1200',
